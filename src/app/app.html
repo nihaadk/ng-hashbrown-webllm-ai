@@ -1,3 +1,37 @@
-<h1>Welcome to the Hashbrown WebLLM AI Application</h1>
+<div class="min-h-screen bg-base-200 flex items-center justify-center p-4">
+  <div class="card w-full max-w-xl bg-base-100 shadow-xl">
+    <div class="card-body gap-4">
+      <h2 class="card-title">Web LLM Demo</h2>
 
-<router-outlet></router-outlet>
+      <!-- LOADING -->
+      @if(!llm.ready()) {
+      <p>Loading model... {{ llm.progress() * 100 | number : '1.0-0' }}%</p>
+
+      <progress
+        class="progress progress-primary w-full"
+        [value]="llm.progress()"
+        max="1"
+      ></progress>
+      } @else {
+      <!-- CHAT UI -->
+      <textarea
+        class="textarea textarea-bordered w-full"
+        rows="3"
+        placeholder="Enter your prompt..."
+        [value]="prompt()"
+        (input)="changePrompt($event)"
+      >
+      </textarea>
+
+      <button class="btn btn-primary" [class.loading]="sending()" (click)="submit()">Send</button>
+
+      @if(reply()) {
+      <div class="chat chat-start mt-2">
+        <div class="chat-bubble whitespace-pre-wrap">
+          {{ reply() }}
+        </div>
+      </div>
+      } }
+    </div>
+  </div>
+</div>
